@@ -15,9 +15,11 @@ spec:
         app: neutrino
     spec:
       hostNetwork: true
+      imagePullSecrets:
+        - name: image-pull-secret
       containers:
         - name: neutrino
-          image: myregistry.com/hummingbird_jiangok:97b150ddd0fedb07b9112807139b5bbeea25e7f7
+          image: lianjiang549/neutrino:0.1
           ports:
             - containerPort: 3629
           volumeMounts:
