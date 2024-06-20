@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: hummingbird-clone
+spec:
+  selector:
+    matchLabels:
+      app: worker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      serviceAccountName: eso-sa
+      hostNetwork: true
+      containers:
+        - name: worker
+          image: 460210468233.dkr.ecr.us-east-1.amazonaws.com/devops/hummingbird_clone:74843b927c8a1a18de7f16cee4699ac9ff5a97d2
+          resources:
+            requests:
+              cpu: 500m
+              memory: 500Mi
+            limits:
+              cpu: 1000m
+              memory: 1000Mi
+          ports:
+            - containerPort: 3629
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+          command: ["/dist/neutrino-linux-x64"]
+          args: ["-worker", "k8s-neutrino.json"]
+          env:
+            - name: MONGO_USERNAME
+              value: hummingbird-clone-latest0-su0-2023-09-25
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hummingbird-clone-secrets
+                  key: mongo-password
+      volumes:
+        - name: config-volume
+          configMap:
+            name: app-config

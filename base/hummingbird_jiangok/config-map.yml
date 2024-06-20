@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: hummingbird-clone
+data:
+  neutrino.json: |
+    {
+      "command": "all",
+      "drop": true,
+      "source": "mongodb+srv://<username>:<password>@latest.vvgbo.mongodb.net/?retryWrites=true&w=majority&appName=latest",
+      "target": "mongodb+srv://<username>:<password>@latest.vvgbo.mongodb.net/?retryWrites=true&w=majority&appName=latest",
+      "includes": [
+        {
+          "namespace": "highspot_latest.actions",
+          "to": "hummingbird_test.actions2"
+        }
+      ],
+      "license": "Apache-2.0",
+      "workers": 8
+    }
